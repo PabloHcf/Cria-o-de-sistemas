@@ -1,0 +1,161 @@
+package br.com.cadastroaluno;
+
+public class Aluno {
+    private String nome;
+    private String matricula;
+
+    public Aluno(String nome, String matricula) {
+        this.nome = nome;
+        this.matricula = matricula;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
+    }
+
+    @Override
+    public String toString() {
+        return "Aluno [Nome=" + nome + ", Matrícula=" + matricula + "]";
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package br.com.cadastroaluno;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Turma {
+    private List<Aluno> alunos;
+
+    public Turma() {
+        alunos = new ArrayList<>();
+    }
+
+    public void adicionarAluno(Aluno aluno) {
+        alunos.add(aluno);
+    }
+
+    public List<Aluno> getAlunos() {
+        return alunos;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+package br.com.cadastroaluno;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CadastroAlunoFrame extends JFrame {
+    private JTextField nomeField;
+    private JTextField matriculaField;
+    private JTextArea displayArea;
+    private Turma turma;
+
+    public CadastroAlunoFrame() {
+        super("Cadastro de Alunos");
+        turma = new Turma();
+        
+        setLayout(new BorderLayout());
+
+        // Painel para entrada de dados
+        JPanel inputPanel = new JPanel(new GridLayout(3, 2));
+        inputPanel.add(new JLabel("Nome:"));
+        nomeField = new JTextField();
+        inputPanel.add(nomeField);
+        inputPanel.add(new JLabel("Matrícula:"));
+        matriculaField = new JTextField();
+        inputPanel.add(matriculaField);
+        
+        JButton adicionarButton = new JButton("Adicionar Aluno");
+        inputPanel.add(adicionarButton);
+
+        // Área de exibição dos alunos cadastrados
+        displayArea = new JTextArea();
+        displayArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(displayArea);
+
+        add(inputPanel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+
+        adicionarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nome = nomeField.getText();
+                String matricula = matriculaField.getText();
+                
+                if (!nome.isEmpty() && !matricula.isEmpty()) {
+                    Aluno aluno = new Aluno(nome, matricula);
+                    turma.adicionarAluno(aluno);
+                    displayAlunos();
+                    nomeField.setText("");
+                    matriculaField.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(CadastroAlunoFrame.this, "Nome e Matrícula são obrigatórios.", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 300);
+        setVisible(true);
+    }
+
+    private void displayAlunos() {
+        StringBuilder sb = new StringBuilder();
+        for (Aluno aluno : turma.getAlunos()) {
+            sb.append(aluno).append("\n");
+        }
+        displayArea.setText(sb.toString());
+    }
+
+    public static void main(String[] args) {
+        new CadastroAlunoFrame();
+    }
+}
+
+
+
+
+
+
